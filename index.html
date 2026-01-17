@@ -6,12 +6,19 @@
     <title></title>
     <link href="style.css" rel="stylesheet" />
 
-    <script src="script.js" defer></script>
+    <script src="js/collision.js"></script>
+    <script src="js/ball.js"></script>
+    <script src="js/hole.js"></script>
+    <script src="js/script.js" defer></script>
   </head>
   <body>
-    <header>
-      <h1>Phone Number Plinko!</h1>
-      <canvas id="canvas" width="640" height="480"></canvas>
+    <header id="header">
+      <h1 id="header-title">Phone Number Plinko!</h1>
     </header>
+
+    <main id="wrapper">
+      <canvas id="canvas" width="640" height="480"></canvas>
+      <button id="btn-release">Release ball!</button>
+    </main>
   </body>
 </html>
