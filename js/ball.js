@@ -8,6 +8,12 @@ const GRAVITY = 0.5;
 
 /* A plinko ball */
 class Ball {
+  #isFalling = false;
+
+  #heldAngle = -0.02;
+  #heldAngleCos = Math.cos(this.#heldAngle);
+  #heldAngleSin = Math.sin(this.#heldAngle);
+
   /**
    * Ball constructor
    *
@@ -16,23 +22,84 @@ class Ball {
    * @param {number} radius
    * @param {number} mass
    * @param {string} color
+   * @param {string} vectorColor
    */
-  constructor(x, y, radius, mass, color) {
+  constructor(x, y, radius, mass, color, vectorColor) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.mass = mass;
+
     this.color = color;
+    this.vectorColor = vectorColor;
 
     this.ax = 0.0;
-    this.ay = 0.0;
+    this.ay = 8.0;
 
     this.collider = new SphereCollider(this.x, this.y, this.radius);
   }
 
-  /* Adds a random bias to the X velocity */
-  addRandomBias() {
-    this.ax = Math.random() * 8 - 4;
+  /**
+   * Drops the ball
+   */
+  release() {
+    this.#isFalling = true;
+  }
+
+  /**
+   * Updates the ball
+   *
+   * @param {number} dt
+   */
+  update(dt) {
+    if (this.#isFalling) {
+      this.#updatePhysics(dt);
+    } else {
+      this.#updateHeld();
+    }
+  }
+
+  /**
+   * Draws the ball to the canvas
+   *
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  /**
+   * Draws the ball direction vector to the canvas
+   *
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  drawVector(ctx) {
+    if (!this.#isFalling) {
+      ctx.lineWidth = 2.0;
+      ctx.strokeStyle = this.vectorColor;
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x + this.ax * 2.0, this.y + this.ay * 2.0);
+      ctx.stroke();
+      ctx.lineWidth = 1.0;
+    }
+  }
+
+  /**
+   * Updates the ball as it is held
+   */
+  #updateHeld() {
+    if (this.ay <= 0.0) {
+      this.#heldAngle *= -1;
+      this.#heldAngleCos = Math.cos(this.#heldAngle);
+      this.#heldAngleSin = Math.sin(this.#heldAngle);
+    }
+
+    this.ax = this.ax * this.#heldAngleCos + this.ay * this.#heldAngleSin;
+    this.ay = this.ay * this.#heldAngleCos - this.ax * this.#heldAngleSin;
   }
 
   /**
@@ -40,7 +107,7 @@ class Ball {
    *
    * @param {number} dt
    */
-  update(dt) {
+  #updatePhysics(dt) {
     this.ay = Math.min(this.ay + GRAVITY, 50.0);
 
     this.x += this.ax * dt;
@@ -76,19 +143,6 @@ class Ball {
   }
 
   /**
-   * Draws the ball to the canvas
-   *
-   * @param {CanvasRenderingContext2D} ctx
-   */
-  draw(ctx) {
-    ctx.fillStyle = this.color;
-
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  /**
    * Computes the collision between balls
    * Based on:
    *   https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
@@ -118,11 +172,15 @@ class Ball {
     }
   }
 
-  /* Resets the ball to its starting position */
+  /**
+   * Resets the ball to its starting position
+   */
   #reset() {
     this.x = 320;
-    this.y = 4;
-    this.ay = 0.0;
-    this.addRandomBias();
+    this.y = 8;
+    this.ax = 0.0;
+    this.ay = 8.0;
+
+    this.#isFalling = false;
   }
 }

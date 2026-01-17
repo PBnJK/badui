@@ -23,12 +23,15 @@ const holeY = 304;
 const pegs = [];
 const holes = [];
 
+const inputTelephone = document.getElementById("input-telephone");
+const releaseButton = document.getElementById("btn-release");
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const ball = spawnBall();
-
 const style = getComputedStyle(canvas);
+
+const ball = spawnBall();
 
 function main() {
   createPegs();
@@ -36,12 +39,18 @@ function main() {
 
   ctx.font = "bold 16px monospace";
 
+  releaseButton.addEventListener("click", () => {
+    ball.release();
+  });
+
   window.setInterval(update, interval);
 }
 
 /* Creates the pegs on the board */
 function createPegs() {
   pegs.length = 0;
+
+  const color = style.getPropertyValue("--plinko-peg");
 
   for (let dy = 0; dy < 16; ++dy) {
     const y = 32 + 16 * dy;
@@ -53,7 +62,7 @@ function createPegs() {
 
     for (let dx = 0; dx < pegCount + (dy % 2); ++dx) {
       const x = bx + pegDist * dx;
-      pegs.push(new Ball(x, y, 2, 100, "grey"));
+      pegs.push(new Ball(x, y, 2, 100, color));
     }
   }
 }
@@ -70,7 +79,7 @@ function createHoles() {
 /* Creates a new hole with a number */
 function createNumberHole(x, number) {
   const callback = () => {
-    console.log(number);
+    inputTelephone.value += number;
   };
 
   return new Hole(
@@ -87,10 +96,10 @@ function createNumberHole(x, number) {
 
 /* Spawns the ball in */
 function spawnBall() {
-  const ball = new Ball(320, 4, 4, 50, "red");
-  ball.addRandomBias();
+  const color = style.getPropertyValue("--plinko-ball");
+  const vectorColor = style.getPropertyValue("--plinko-ball-vector");
 
-  return ball;
+  return new Ball(320, 8, 4, 50, color, vectorColor);
 }
 
 /* Main loop */
@@ -100,6 +109,8 @@ function update() {
   ball.update(0.1667);
 
   ball.draw(ctx);
+  ball.drawVector(ctx);
+
   for (const peg of pegs) {
     peg.draw(ctx);
   }
