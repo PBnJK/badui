@@ -18,14 +18,22 @@
 
     <main id="wrapper">
       <div id="input-wrapper">
-        <label id="label-telephone">
+        <label for="input-telephone" id="label-telephone">
           <b>Your telephone number:</b>
-          <input id="input-telephone" type="tel" name="input-telephone" />
         </label>
+        <input
+          readonly
+          id="input-telephone"
+          type="tel"
+          name="input-telephone"
+        />
       </div>
       <div id="plinko-wrapepr">
-        <canvas id="canvas" width="640" height="480"></canvas>
-        <button id="btn-release"><b>Release ball!</b></button>
+        <canvas id="canvas" width="640" height="400"></canvas>
+        <div id="controls-wrapper">
+          <button id="btn-release"><b>Release ball!</b></button>
+          <button id="btn-reroll">🔄</button>
+        </div>
       </div>
     </main>
   </body>

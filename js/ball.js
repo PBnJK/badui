@@ -117,7 +117,7 @@ class Ball {
     this.collider.y = this.y;
 
     /* Collide with walls */
-    if (this.x > 448 || this.x < 192) {
+    if (this.x > 446 || this.x < 194) {
       this.ax *= -0.9;
     }
 

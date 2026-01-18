@@ -4,12 +4,28 @@
 
 :root {
   --bg-primary: #2a2a42;
+  --bg-secondary: #ffefff;
+  --bg-highlight: #b0a0b0;
 
   --bg-hole-number: #80b080;
+  --bg-hole-blank: #a0a0a0;
+  --bg-hole-erase: #602222;
+  --bg-hole-bomb: #000000;
+  --bg-hole-submit: #60ff60;
 
   --font-primary: #ffefff;
 
   --font-hole-number: #000000;
+  --font-hole-blank: #200020;
+  --font-hole-erase: #d0b0d0;
+  --font-hole-bomb: var(--font-primary);
+  --font-hole-submit: #200020;
+
+  --border-hole-number: #408040;
+  --border-hole-blank: #808080;
+  --border-hole-erase: #804444;
+  --border-hole-bomb: #202020;
+  --border-hole-submit: #80ff80;
 
   --plinko-peg: #f0f0d0;
   --plinko-ball: #ffffdf;
@@ -42,6 +58,11 @@ body {
 }
 
 #input-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  margin-bottom: 32px;
 }
 
 #label-telephone {
@@ -50,14 +71,44 @@ body {
 #input-telephone {
 }
 
+#plinko-wrapepr {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 #canvas {
   display: block;
   margin: 0 auto;
 }
 
+#controls-wrapper {
+  display: flex;
+  justify-content: center;
+
+  gap: 16px;
+}
+
 #btn-release {
-  display: block;
-  margin: 0 auto;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--bg-highlight);
+  border-radius: 4px;
 
   width: 256px;
+  height: 32px;
+}
+
+#btn-reroll {
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--bg-highlight);
+  border-radius: 4px;
+
+  width: 32px;
+  height: 32px;
+}
+
+#btn-release:hover,
+#btn-reroll:hover {
+  background-color: var(--bg-highlight);
+  cursor: pointer;
 }

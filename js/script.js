@@ -24,7 +24,9 @@ const pegs = [];
 const holes = [];
 
 const inputTelephone = document.getElementById("input-telephone");
+
 const releaseButton = document.getElementById("btn-release");
+const rerollButton = document.getElementById("btn-reroll");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -41,6 +43,10 @@ function main() {
 
   releaseButton.addEventListener("click", () => {
     ball.release();
+  });
+
+  rerollButton.addEventListener("click", () => {
+    createHoles();
   });
 
   window.setInterval(update, interval);
@@ -69,10 +75,44 @@ function createPegs() {
 
 /* Creates the holes on the board */
 function createHoles() {
+  holes.length = 0;
+
+  const coords = [];
   const bx = halfWidth - holeWidth * (holeCount / 2);
   for (let dx = 0; dx < holeCount; ++dx) {
     const x = bx + holeWidth * dx;
-    holes.push(createNumberHole(x, 2));
+    coords.push(x);
+  }
+
+  shuffleArray(coords);
+
+  let i;
+
+  /* Numbers */
+  const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  shuffleArray(numbers);
+  for (i = 0; i < 4; ++i) {
+    holes.push(createNumberHole(coords[i], numbers[i]));
+  }
+
+  /* Blank */
+  holes.push(createBlankHole(coords[i++]));
+
+  /* Erase */
+  holes.push(createEraseHole(coords[i++]));
+
+  /* Bomb */
+  holes.push(createBombHole(coords[i++]));
+
+  /* Submit */
+  holes.push(createSubmitHole(coords[i++]));
+}
+
+/* Fisher-Yates shuffle */
+function shuffleArray(array) {
+  for (let i = array.length - 1; i >= 1; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
 }
 
@@ -82,14 +122,111 @@ function createNumberHole(x, number) {
     inputTelephone.value += number;
   };
 
+  const fontColor = style.getPropertyValue("--font-hole-number");
+  const bgColor = style.getPropertyValue("--bg-hole-number");
+  const borderColor = style.getPropertyValue("--border-hole-number");
+
   return new Hole(
     x,
     holeY,
     holeWidth,
     holeHeight,
     number.toString(),
-    style.getPropertyValue("--font-hole-number"),
-    style.getPropertyValue("--bg-hole-number"),
+    fontColor,
+    bgColor,
+    borderColor,
+    callback,
+  );
+}
+
+/* Creates a new hole that does nothing */
+function createBlankHole(x) {
+  const callback = () => {};
+
+  const fontColor = style.getPropertyValue("--font-hole-blank");
+  const bgColor = style.getPropertyValue("--bg-hole-blank");
+  const borderColor = style.getPropertyValue("--border-hole-blank");
+
+  return new Hole(
+    x,
+    holeY,
+    holeWidth,
+    holeHeight,
+    "",
+    fontColor,
+    bgColor,
+    borderColor,
+    callback,
+  );
+}
+
+/* Creates a new hole that erases a single character */
+function createEraseHole(x) {
+  const callback = () => {
+    if (inputTelephone.value !== "") {
+      inputTelephone.value = inputTelephone.value.slice(0, -1);
+    }
+  };
+
+  const fontColor = style.getPropertyValue("--font-hole-erase");
+  const bgColor = style.getPropertyValue("--bg-hole-erase");
+  const borderColor = style.getPropertyValue("--border-hole-erase");
+
+  return new Hole(
+    x,
+    holeY,
+    holeWidth,
+    holeHeight,
+    "❌",
+    fontColor,
+    bgColor,
+    borderColor,
+    callback,
+  );
+}
+
+/* Creates a new hole that erases the hole thing!!!*/
+function createBombHole(x) {
+  const callback = () => {
+    inputTelephone.value = "";
+  };
+
+  const fontColor = style.getPropertyValue("--font-hole-bomb");
+  const bgColor = style.getPropertyValue("--bg-hole-bomb");
+  const borderColor = style.getPropertyValue("--border-hole-bomb");
+
+  return new Hole(
+    x,
+    holeY,
+    holeWidth,
+    holeHeight,
+    "💣",
+    fontColor,
+    bgColor,
+    borderColor,
+    callback,
+  );
+}
+
+/* Creates a new hole that submits the form */
+function createSubmitHole(x) {
+  const callback = () => {
+    inputTelephone.value = "";
+  };
+
+  const fontColor = style.getPropertyValue("--font-hole-submit");
+  const bgColor = style.getPropertyValue("--bg-hole-submit");
+  const borderColor = style.getPropertyValue("--border-hole-submit");
+
+  return new Hole(
+    x,
+    holeY,
+    holeWidth,
+    holeHeight,
+    "✅",
+    fontColor,
+    bgColor,
+    borderColor,
     callback,
   );
 }
