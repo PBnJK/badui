@@ -1,5 +1,5 @@
 /* Plinko
- * Stylesheet
+ * Main stylesheet
  */
 
 :root {
@@ -14,6 +14,7 @@
   --bg-hole-submit: #60ff60;
 
   --font-primary: #ffefff;
+  --font-secondary: #4a4a62;
 
   --font-hole-number: #000000;
   --font-hole-blank: #200020;
@@ -44,6 +45,11 @@ html {
 
 body {
   margin: 0;
+}
+
+hr {
+  margin: 64px 0;
+  color: var(--font-primary);
 }
 
 #header {
@@ -111,4 +117,17 @@ body {
 #btn-reroll:hover {
   background-color: var(--bg-highlight);
   cursor: pointer;
+}
+
+#howto-wrapper {
+  padding-bottom: 128px;
+}
+
+#howto-title {
+  text-align: center;
+}
+
+#howto-box {
+  margin: 0 auto;
+  width: 800px;
 }

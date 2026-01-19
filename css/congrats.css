@@ -1,0 +1,39 @@
+/* Plinko
+ * Congrats stylesheet
+ */
+
+p {
+  font-size: 14pt;
+}
+
+#congrats-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.congrats-msg {
+  text-align: center;
+}
+
+.congrats-msg sup {
+  color: var(--font-secondary);
+}
+
+#stats-box {
+  display: block;
+  width: 480px;
+  text-align: center;
+
+  padding: 32px 16px;
+
+  border: 8px solid #1a1a3a;
+  border-radius: 16px;
+
+  background-color: #0a0a2a;
+}
+
+#stats-wrapper {
+  text-align: start;
+}

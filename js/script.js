@@ -4,6 +4,13 @@
 
 "use strict";
 
+const HoleType = {
+  BLANK: 10,
+  ERASE: 11,
+  BOMB: 12,
+  SUBMIT: 13,
+};
+
 const FPS = 60;
 const interval = 1000.0 / FPS;
 
@@ -12,13 +19,16 @@ const halfWidth = width / 2;
 const height = 480;
 const halfHeight = height / 2;
 
-const pegDist = 16;
-const pegCount = 16;
+const pegDist = 22;
+const pegCount = 12;
 
 const holeWidth = 32;
 const holeHeight = 64;
 const holeCount = 8;
 const holeY = 304;
+
+const statsErases = 0;
+const statsBombs = 0;
 
 const pegs = [];
 const holes = [];
@@ -58,8 +68,8 @@ function createPegs() {
 
   const color = style.getPropertyValue("--plinko-peg");
 
-  for (let dy = 0; dy < 16; ++dy) {
-    const y = 32 + 16 * dy;
+  for (let dy = 0; dy < 12; ++dy) {
+    const y = 32 + 22 * dy;
 
     let bx = halfWidth - pegDist * (pegCount / 2);
     if (dy % 2 === 0) {
@@ -77,6 +87,8 @@ function createPegs() {
 function createHoles() {
   holes.length = 0;
 
+  const ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
   const coords = [];
   const bx = halfWidth - holeWidth * (holeCount / 2);
   for (let dx = 0; dx < holeCount; ++dx) {
@@ -84,28 +96,29 @@ function createHoles() {
     coords.push(x);
   }
 
+  shuffleArray(ids);
   shuffleArray(coords);
 
-  let i;
-
-  /* Numbers */
-  const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  shuffleArray(numbers);
-  for (i = 0; i < 4; ++i) {
-    holes.push(createNumberHole(coords[i], numbers[i]));
+  for (let i = 0; i < 8; ++i) {
+    const id = ids[i];
+    switch (id) {
+      case HoleType.BLANK:
+        holes.push(createBlankHole(coords[i]));
+        break;
+      case HoleType.ERASE:
+        holes.push(createEraseHole(coords[i]));
+        break;
+      case HoleType.BOMB:
+        holes.push(createBombHole(coords[i]));
+        break;
+      case HoleType.SUBMIT:
+        holes.push(createSubmitHole(coords[i]));
+        break;
+      default:
+        holes.push(createNumberHole(coords[i], id));
+        break;
+    }
   }
-
-  /* Blank */
-  holes.push(createBlankHole(coords[i++]));
-
-  /* Erase */
-  holes.push(createEraseHole(coords[i++]));
-
-  /* Bomb */
-  holes.push(createBombHole(coords[i++]));
-
-  /* Submit */
-  holes.push(createSubmitHole(coords[i++]));
 }
 
 /* Fisher-Yates shuffle */
@@ -119,7 +132,11 @@ function shuffleArray(array) {
 /* Creates a new hole with a number */
 function createNumberHole(x, number) {
   const callback = () => {
+    createHoles();
     inputTelephone.value += number;
+
+    const audioAdd = new Audio("assets/snd_input_add.mp3");
+    audioAdd.play();
   };
 
   const fontColor = style.getPropertyValue("--font-hole-number");
@@ -141,7 +158,9 @@ function createNumberHole(x, number) {
 
 /* Creates a new hole that does nothing */
 function createBlankHole(x) {
-  const callback = () => {};
+  const callback = () => {
+    createHoles();
+  };
 
   const fontColor = style.getPropertyValue("--font-hole-blank");
   const bgColor = style.getPropertyValue("--bg-hole-blank");
@@ -163,8 +182,13 @@ function createBlankHole(x) {
 /* Creates a new hole that erases a single character */
 function createEraseHole(x) {
   const callback = () => {
+    createHoles();
     if (inputTelephone.value !== "") {
       inputTelephone.value = inputTelephone.value.slice(0, -1);
+      ++statsErases;
+
+      const audioDel = new Audio("assets/snd_input_del.mp3");
+      audioDel.play();
     }
   };
 
@@ -188,7 +212,13 @@ function createEraseHole(x) {
 /* Creates a new hole that erases the hole thing!!!*/
 function createBombHole(x) {
   const callback = () => {
+    createHoles();
     inputTelephone.value = "";
+
+    const audioBoom = new Audio("assets/snd_boom.mp3");
+    audioBoom.play();
+
+    ++statsBombs;
   };
 
   const fontColor = style.getPropertyValue("--font-hole-bomb");
@@ -211,7 +241,8 @@ function createBombHole(x) {
 /* Creates a new hole that submits the form */
 function createSubmitHole(x) {
   const callback = () => {
-    inputTelephone.value = "";
+    createHoles();
+    validateForm();
   };
 
   const fontColor = style.getPropertyValue("--font-hole-submit");
@@ -254,6 +285,16 @@ function update() {
   for (const hole of holes) {
     hole.draw(ctx);
   }
+}
+
+function validateForm() {
+  if (inputTelephone.value.length < 8) {
+    const audioDel = new Audio("assets/snd_input_del.mp3");
+    audioDel.play();
+    return;
+  }
+
+  window.location.href = `congrats.html?bounces=${ball.bounces}&releases=${ball.releases}&erases=${statsErases}&bombs=${statsBombs}`;
 }
 
 main();

@@ -37,6 +37,11 @@ class Ball {
     this.ay = 8.0;
 
     this.collider = new SphereCollider(this.x, this.y, this.radius);
+
+    this.audioPlinko = new Audio("assets/snd_plinko.mp3");
+
+    this.bounces = 0;
+    this.releases = 0;
   }
 
   /**
@@ -44,6 +49,13 @@ class Ball {
    */
   release() {
     this.#isFalling = true;
+    if (this.ax >= 0.0 && this.ax < 1.0) {
+      this.ax = 1.0;
+    } else if (this.ax > -1.0 && this.ax <= 0.0) {
+      this.ax = -1.0;
+    }
+
+    ++this.releases;
   }
 
   /**
@@ -118,6 +130,7 @@ class Ball {
 
     /* Collide with walls */
     if (this.x > 446 || this.x < 194) {
+      ++this.bounces;
       this.ax *= -0.9;
     }
 
@@ -130,6 +143,11 @@ class Ball {
 
         this.collider.x = this.x;
         this.collider.y = this.y;
+
+        this.audioPlinko.pause();
+        this.audioPlinko.play();
+
+        ++this.bounces;
       }
     }
 
