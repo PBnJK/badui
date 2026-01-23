@@ -27,9 +27,6 @@ const holeHeight = 64;
 const holeCount = 8;
 const holeY = 304;
 
-const statsErases = 0;
-const statsBombs = 0;
-
 const pegs = [];
 const holes = [];
 
@@ -44,6 +41,9 @@ const ctx = canvas.getContext("2d");
 const style = getComputedStyle(canvas);
 
 const ball = spawnBall();
+
+let statsErases = 0;
+let statsBombs = 0;
 
 function main() {
   createPegs();
