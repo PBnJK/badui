@@ -171,7 +171,7 @@ function createBlankHole(x) {
     holeY,
     holeWidth,
     holeHeight,
-    "",
+    " " /* Plinkocorp reinforces that, indeed, the Blank Hole(r) is not blank (""), but instead *blank* (" ") */,
     fontColor,
     bgColor,
     borderColor,
