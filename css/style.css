@@ -3,9 +3,9 @@
  */
 
 :root {
-  --bg-primary: #2a2a42;
-  --bg-secondary: #ffefff;
-  --bg-highlight: #b0a0b0;
+  --bg-primary: #ffd8a8;
+  --bg-secondary: #80aaff;
+  --bg-highlight: #b0f020;
 
   --bg-hole-number: #80b080;
   --bg-hole-blank: #a0a0a0;
@@ -13,10 +13,10 @@
   --bg-hole-bomb: #000000;
   --bg-hole-submit: #60ff60;
 
-  --font-primary: #ffefff;
-  --font-secondary: #4a4a62;
+  --font-primary: #ffffcf;
+  --font-secondary: #4affff;
 
-  --font-hole-number: #000000;
+  --font-hole-number: #5f8f4f;
   --font-hole-blank: #200020;
   --font-hole-erase: #d0b0d0;
   --font-hole-bomb: var(--font-primary);
