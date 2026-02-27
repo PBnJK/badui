@@ -33,6 +33,13 @@ You can also access it on my [personal website](https://pbnjk.github.io/badui)!
 
 ## Credits
 
+Thanks to Wikipedia and Stack Overflow for the maths!
+
+Sources:
+
+- [Elastic collision (on Wikipedia)](https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects)
+- [Rectangle collision (on Stack Overflow)](https://stackoverflow.com/a/35849250)
+
 ## FAQ
 
 > Brother I can't see anything
