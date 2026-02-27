@@ -4,6 +4,17 @@
 
 "use strict";
 
+const PRETTY_COLORS_TABLE = {
+  "--bg-primary": "#2a2a42",
+  "--bg-secondary": "#ffefff",
+  "--bg-highlight": "#b0a0b0",
+
+  "--font-primary": "#ffefff",
+  "--font-secondary": "#4a4a62",
+
+  "--font-hole-number": "#000000",
+};
+
 const HoleType = {
   BLANK: 10,
   ERASE: 11,
@@ -46,6 +57,8 @@ let statsErases = 0;
 let statsBombs = 0;
 
 function main() {
+  checkPrettyTheme();
+
   createPegs();
   createHoles();
 
@@ -60,6 +73,17 @@ function main() {
   });
 
   window.setInterval(update, interval);
+}
+
+/* Checks if the user can't handle these beautiful colors */
+function checkPrettyTheme() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("pretty")) {
+    const root = document.querySelector(":root");
+    for (const key in PRETTY_COLORS_TABLE) {
+      root.style.setProperty(key, PRETTY_COLORS_TABLE[key]);
+    }
+  }
 }
 
 /* Creates the pegs on the board */
